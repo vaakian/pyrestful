@@ -13,7 +13,6 @@ def init_app(app):
 class Product(db.Model):
     # 此处建表用
     id = db.Column(db.Integer, primary_key=True)
-    # 字符长度
     name = db.Column(db.String(100), unique=True)
     description = db.Column(db.String(200))
     price = db.Column(db.Float)
