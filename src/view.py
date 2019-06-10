@@ -5,7 +5,8 @@ db = models.db
 #init schema
 product_schema = models.ProductSchema(strict=False)
 products_schema = models.ProductSchema(many=True, strict=False)
-
+user_schema = models.UserSchema(strict=False)
+users_schema = models.UserSchema(many=True, strict=False)
 def try_error(id):
     if not models.Product.query.get(id):
         abort(404, message="id <{}> doesn't exist".format(id))
@@ -67,5 +68,20 @@ class r_product(Resource):
         return '', 204
     def get(self, id):
         try_error(id)
-        product = models.Product.query.get(id)
-        return product_schema.dump(product).data, 200
+        products = models.Product.query.get(id)
+        return product_schema.dump(products).data, 200
+class r_user_list(Resource):
+    def get(self):
+        users = models.User.query.all()
+        result = users_schema.dump(users)
+        return result.data, 200
+    def post(self):
+        user = models.User(
+            user_name = request.json['user_name'],
+            user_pass = request.json['user_pass'],
+            open_id = request.json['open_id']
+            )
+        db.session.add(user)
+        try_commit()
+        result = user_schema.dump(user)
+        return result.data, 201
