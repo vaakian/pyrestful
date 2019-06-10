@@ -11,7 +11,7 @@ def init_app(app):
     db.init_app(app)
     
 class Product(db.Model):
-    # 此处建表用
+    # 此处建表、以及产品创建用
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
     description = db.Column(db.String(200))
