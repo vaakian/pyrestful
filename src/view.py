@@ -2,11 +2,15 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, abort
 from . import models
 db = models.db
-#init schema
+#init schema 实例化schema类
 product_schema = models.ProductSchema(strict=False)
 products_schema = models.ProductSchema(many=True, strict=False)
+
 user_schema = models.UserSchema(strict=False)
 users_schema = models.UserSchema(many=True, strict=False)
+
+question_schema = models.QuestionSchema(strict=False)
+questions_schema = models.QuestionSchema(many=True, strict=False)
 def try_error(id):
     if not models.Product.query.get(id):
         abort(404, message="id <{}> doesn't exist".format(id))
@@ -84,4 +88,21 @@ class r_user_list(Resource):
         db.session.add(user)
         try_commit()
         result = user_schema.dump(user)
+        return result.data, 201
+class r_question_list(Resource):
+    def get(self):
+        questions = models.Question.query.limit(20)
+        result = questions_schema.dump(questions)
+
+        return result.data, 200
+    def post(self):
+        question = models.Question(
+            title = request.json['title'],
+            options = request.json['options'],
+            answer = request.json['answer']
+        )
+        db.session.add(question)
+        try_commit()
+
+        result = question_schema.dump(question)
         return result.data, 201

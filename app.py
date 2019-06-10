@@ -13,5 +13,7 @@ api.add_resource(view.r_product_list, '/product')
 api.add_resource(view.r_product, '/product/<id>')
 
 api.add_resource(view.r_user_list, '/user')
+
+api.add_resource(view.r_question_list, '/question')
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
